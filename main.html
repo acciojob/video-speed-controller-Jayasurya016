@@ -2,20 +2,164 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Video Speed Scrubber</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Custom Video Player</title>
+  <style>
+    body {
+      background: #222;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+    }
+    .player {
+      max-width: 750px;
+      width: 100%;
+      background: #333;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    video {
+      width: 100%;
+      display: block;
+    }
+    .player__controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: #444;
+      flex-wrap: wrap;
+    }
+    .progress {
+      flex: 1;
+      background: #666;
+      height: 6px;
+      cursor: pointer;
+      border-radius: 3px;
+      position: relative;
+    }
+    .progress__filled {
+      background: #00ff88;
+      width: 0;
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.1s linear;
+    }
+    input[type=range] {
+      width: 100px;
+    }
+    button {
+      background: none;
+      border: 1px solid #aaa;
+      padding: 5px 10px;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #555;
+    }
+  </style>
 </head>
 <body>
+  <div class="player">
+    <!-- Video -->
+    <video class="viewer" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
 
-  <div class="wrapper">
-    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" controls></video>
-    <div class="speed">
-      <div class="speed-bar">1×</div>
+    <!-- Controls -->
+    <div class="player__controls">
+      <button class="player__button toggle" title="Toggle Play">►</button>
+      <button data-skip="-10">« 10s</button>
+      <button data-skip="25">25s »</button>
+      <label>🔊 
+        <input type="range" name="volume" class="volume" min="0" max="1" step="0.05" value="1">
+      </label>
+      <label>⏩ 
+        <input type="range" name="playbackRate" class="playbackSpeed" min="0.5" max="2" step="0.1" value="1">
+      </label>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress">
+      <div class="progress__filled"></div>
     </div>
   </div>
 
-<script  src="./script.js">
-  //Your code goes here
-</script>
+  <script>
+    // Get elements
+    const player = document.querySelector('.player');
+    const video = player.querySelector('.viewer');
+    const toggle = player.querySelector('.toggle');
+    const volume = player.querySelector('.volume');
+    const playbackSpeed = player.querySelector('.playbackSpeed');
+    const skipButtons = player.querySelectorAll('[data-skip]');
+    const progress = player.querySelector('.progress');
+    const progressBar = player.querySelector('.progress__filled');
+
+    // Play / Pause toggle
+    function togglePlay() {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+
+    // Update button icon
+    function updateButton() {
+      toggle.textContent = video.paused ? '►' : '❚ ❚';
+    }
+
+    // Skip video
+    function skip(event) {
+      const skipValue = parseFloat(event.target.dataset.skip);
+      video.currentTime += skipValue;
+    }
+
+    // Volume control
+    function handleVolume(event) {
+      video.volume = event.target.value;
+    }
+
+    // Playback speed control
+    function handleSpeed(event) {
+      video.playbackRate = event.target.value;
+    }
+
+    // Update progress bar
+    function handleProgress() {
+      const percent = (video.currentTime / video.duration) * 100;
+      progressBar.style.width = `${percent}%`;
+    }
+
+    // Scrub progress bar (seek)
+    function scrub(event) {
+      const scrubTime = (event.offsetX / progress.offsetWidth) * video.duration;
+      video.currentTime = scrubTime;
+    }
+
+    // Event listeners
+    video.addEventListener('click', togglePlay);
+    video.addEventListener('play', updateButton);
+    video.addEventListener('pause', updateButton);
+    video.addEventListener('timeupdate', handleProgress);
+
+    toggle.addEventListener('click', togglePlay);
+    skipButtons.forEach(button => button.addEventListener('click', skip));
+
+    volume.addEventListener('input', handleVolume);
+    playbackSpeed.addEventListener('input', handleSpeed);
+
+    let mousedown = false;
+    progress.addEventListener('click', scrub);
+    progress.addEventListener('mousemove', (e) => mousedown && scrub(e));
+    progress.addEventListener('mousedown', () => mousedown = true);
+    progress.addEventListener('mouseup', () => mousedown = false);
+  </script>
 </body>
 </html>
