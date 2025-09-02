@@ -3,37 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>Custom Video Player</title>
-  <style>
-	  
-  </style>
 </head>
 <body>
   <div class="player">
-    <!-- Video -->
     <video class="viewer" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
 
-    <!-- Controls -->
     <div class="player__controls">
+      <div class="progress">
+        <div class="progress__filled"></div>
+      </div>
+
       <button class="player__button toggle" title="Toggle Play">►</button>
       <button data-skip="-10">« 10s</button>
       <button data-skip="25">25s »</button>
-      <label>🔊 
-        <input type="range" name="volume" class="volume" min="0" max="1" step="0.05" value="1">
-      </label>
-      <label>⏩ 
-        <input type="range" name="playbackRate" class="playbackSpeed" min="0.5" max="2" step="0.1" value="1">
-      </label>
-    </div>
 
-    <!-- Progress bar -->
-    <div class="progress">
-      <div class="progress__filled"></div>
+      <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="1">
+      <input type="range" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.1" value="1">
     </div>
   </div>
 
-  <script type="text/javascript" src="./script.js">
-    // Get elements
-	  
-  </script>
+  <script type="text/javascript" src="./script.js"> </script>
 </body>
 </html>
