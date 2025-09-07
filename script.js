@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   progress.addEventListener('mousemove', (e) => isMouseDown && scrub(e));
 
   /* -----------------------
-     EXTRA FEATURES
+      EXTRA FEATURES
   ----------------------- */
 
   // Fullscreen button
