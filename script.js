@@ -56,4 +56,43 @@ document.addEventListener('DOMContentLoaded', () => {
   progress.addEventListener('mousedown', () => isMouseDown = true);
   progress.addEventListener('mouseup', () => isMouseDown = false);
   progress.addEventListener('mousemove', (e) => isMouseDown && scrub(e));
+
+  /* -----------------------
+     EXTRA FEATURES
+  ----------------------- */
+
+  // Fullscreen button
+  const fullscreenButton = document.createElement('button');
+  fullscreenButton.textContent = '⛶';
+  document.querySelector('.controls').appendChild(fullscreenButton);
+
+  fullscreenButton.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      video.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case ' ': // Spacebar toggle
+        e.preventDefault();
+        togglePlay();
+        break;
+      case 'ArrowRight': // Forward 5s
+        video.currentTime += 5;
+        break;
+      case 'ArrowLeft': // Backward 5s
+        video.currentTime -= 5;
+        break;
+      case 'ArrowUp': // Volume up
+        video.volume = Math.min(1, video.volume + 0.1);
+        break;
+      case 'ArrowDown': // Volume down
+        video.volume = Math.max(0, video.volume - 0.1);
+        break;
+    }
+  });
 });
